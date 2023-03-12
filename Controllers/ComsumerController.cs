@@ -16,18 +16,24 @@ namespace ConsumingApis.Controllers
         [HttpGet]
         public async Task<JsonResult> GetQuantityOfOrangeJuices(string name, int quantity)
         {
+
+            //https:/localhost:7113/WebApiLecture?name={0}&quantity={1}
             var resmoteServiceUrl = GetResmoteServiceUrlWithNameAndQuantity(name, quantity);
 
             HttpResponseMessage response = null;
 
             using (var client = new HttpClient())
             {
-                response = await client.SendAsync(new HttpRequestMessage(HttpMethod.Get, resmoteServiceUrl));
+                var request = new HttpRequestMessage(HttpMethod.Get, resmoteServiceUrl);
 
-                var getResponse = await client.GetAsync(resmoteServiceUrl);
+                response = await client.SendAsync(request);
+
+                //var getResponse = await client.GetAsync(resmoteServiceUrl);
             }
 
-            return new JsonResult(await response.Content.ReadAsStringAsync());
+            var content = await response.Content.ReadAsStringAsync();
+
+            return new JsonResult(content);
         }
 
         private string GetResmoteServiceUrlWithNameAndQuantity(string name, int quantity)
